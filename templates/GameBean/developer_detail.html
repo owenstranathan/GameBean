@@ -1,0 +1,15 @@
+{% extends "paginated_table_with_detail.html" %}
+{% block head_title %} {{detail_item.name}} {% endblock head_title %}
+
+{%block table_head %}
+    <th>ID</th>
+    <th>Name</th>
+{% endblock %}
+{%block table_body %}
+    {% for game in paginator %}
+        <tr>
+            <td> <a href="{% url 'game_detail' game.name %}"> {{game.id}} </a> </td>
+            <td> <a href="{% url 'game_detail' game.name %}"> {{game.name}} </a> </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

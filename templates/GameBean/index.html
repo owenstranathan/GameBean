@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block head_title %}GameBean{% endblock %}
+
+
+{% block content %}
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Welcome to GameBean!</h1>
+      <p>GameBean is a huge database of Video games, all the data comes from Giantbomb's generous API which exposes their game database. GameBean is an Open Source project. Get started by searching for a game or you can browse the game directory. ENJOY!</p>
+      <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more about GameBean &raquo;</a></p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Games Listing</h2>
+        <p>View our massive games listing</p>
+        <p><a class="btn btn-default" href="{% url 'games' %}" role="button">Games! &raquo;</a></p>
+      </div>
+      <div class="col-md-6">
+        <h2>Browse by Genre</h2>
+        <p>Don't know what you looking for? Browse games by genre!</p>
+        <p><a class="btn btn-default" href="{% url 'genres' %}" role="button">Genres! &raquo;</a></p>
+     </div>
+      <div class="col-md-6">
+        <h2>Game Developers</h2>
+        <p>Have a favorite developer? Want to know more of their games? Search for a games from a specific developer</p>
+        <p><a class="btn btn-default" href="{% url 'developers' %}" role="button">Developers! &raquo;</a></p>
+      </div>
+      <div class="col-md-6">
+        <h2>Browse by Platform</h2>
+        <p>Looking for new games on your platform? Browse games that are on your system!</p>
+        <p><a class="btn btn-default" href="" role="button">Platforms! &raquo;</a></p>
+      </div>
+    </div>
+  </div> <!-- /container -->
+{% endblock %}
