@@ -6,14 +6,25 @@
 import requests
 import json
 import sys
-from GameBean.models import Company, Platform, Game, Genre
-from django.utils.dateparse import parse_datetime
 import traceback
 import pytz
 import time
 
+from GameBean.models import Company, Platform, Game, Genre
+from django.utils.dateparse import parse_datetime
+from django.core.exceptions import ImproperlyConfigured
+
+def get_env_variable(var_name):
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Set the %s environment variable" % var_name
+        raise ImproperlyConfigured(error_msg)
+
+
+
 api_url = "http://www.giantbomb.com/api/"
-api_key = '4d0b8b3fa860fa184fce607c54f462e564df371c'
+api_key = get_env_variable(API_KEY)
 encoding_format = 'json'
 
 
