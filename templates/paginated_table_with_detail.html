@@ -1,9 +1,8 @@
-{% extends "base.html" %}
+{% extends "paginated_table.html" %}
 {% block head_title %}{% endblock %}
 
-{% block content %}
 
-
+{% block optional_detail %}
 <div class="jumbotron" style="padding:10px 10px 10px 10px">
     <!-- <img src="{{detail_item.image_url}}"/> -->
     <h1> {{detail_item.name}} </h1>
@@ -18,79 +17,4 @@
         {% endif %}
     {% endautoescape %}
 </div>
-
-<div class="">
-
-    <div class="pagination" style="margin:10px 10px 10px 10px">
-        <ul class="pagination">
-            {% if paginator.number > 3 %}
-                <li><a href="?page={{paginator.number|add:"-6"}}"><<</a></li>
-                <li><a href="?page={{paginator.number|add:"-3"}}"> {{paginator.number|add:"-3"}} </a></li>
-            {%endif %}
-
-            {% if paginator.number > 2 %}
-                <li><a href="?page={{paginator.number|add:"-2"}}">{{paginator.number|add:"-2"}}</a></li>
-            {%endif %}
-            {% if paginator.number > 1 %}
-                <li><a href="?page={{paginator.number|add:"-1"}}">{{paginator.number|add:"-1"}}</a></li>
-            {%endif %}
-
-            <li class="active"><a href="#">{{paginator.number}}</a></li>
-
-            <li><a href="?page={{paginator.number|add:"1"}}">{{paginator.number|add:"1"}}</a></li>
-            <li><a href="?page={{paginator.number|add:"2"}}">{{paginator.number|add:"2"}}</a></li>
-            <li><a href="?page={{paginator.number|add:"3"}}">{{paginator.number|add:"3"}}</a></li>
-
-            {% if paginator.number|add:"3" < paginator.paginator.num_pages %}
-                <li><a href="?page={{paginator.number|add:"6"}}">>></a></li>
-            {% endif %}
-        </ul>
-    </div>
-
-    <style>
-        td:hover{
-            text-decoration: none;
-        }
-        td a{
-            color:inherit;
-            text-decoration:none;
-            display:block
-        }
-    </style>
-    <div style="margin: 10px 10px 10px 10px">
-        <table class="table table-hover table-striped">
-            <tr>
-                {% block table_head%}{% endblock %}
-            </tr>
-            {% block table_body %}{% endblock %}
-        </table>
-    </div>
-
-    <div class="pagination" style="margin:10px 10px 10px 10px">
-        <ul class="pagination">
-            {% if paginator.number > 3 %}
-                <li><a href="?page={{paginator.number|add:"-6"}}"><<</a></li>
-                <li><a href="?page={{paginator.number|add:"-3"}}"> {{paginator.number|add:"-3"}} </a></li>
-            {%endif %}
-
-            {% if paginator.number > 2 %}
-                <li><a href="?page={{paginator.number|add:"-2"}}">{{paginator.number|add:"-2"}}</a></li>
-            {%endif %}
-            {% if paginator.number > 1 %}
-                <li><a href="?page={{paginator.number|add:"-1"}}">{{paginator.number|add:"-1"}}</a></li>
-            {%endif %}
-
-            <li class="active"><a href="#">{{paginator.number}}</a></li>
-
-            <li><a href="?page={{paginator.number|add:"1"}}">{{paginator.number|add:"1"}}</a></li>
-            <li><a href="?page={{paginator.number|add:"2"}}">{{paginator.number|add:"2"}}</a></li>
-            <li><a href="?page={{paginator.number|add:"3"}}">{{paginator.number|add:"3"}}</a></li>
-
-            {% if paginator.number|add:"3" < paginator.paginator.num_pages %}
-                <li><a href="?page={{paginator.number|add:"6"}}">>></a></li>
-            {% endif %}
-        </ul>
-    </div>
-</div>
-
-{% endblock content %}
+{%endblock%}

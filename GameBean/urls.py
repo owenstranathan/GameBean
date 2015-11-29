@@ -10,6 +10,6 @@ urlpatterns = [
     url(r'^Genres/(?P<genre_name>.+)/$', views.genreDetail, name='genre_detail'),
     url(r'^Developers/$', views.developersIndex, name='developers'),
     url(r'^Developers/(?P<developer_name>.+)/$', views.developerDetail, name='developer_detail'),
-
-
+    url(r'^Platforms/$', views.platformsIndex, name='platforms'),
+    url(r'^Platforms/(?P<platform_name>.+)/$', views.platformDetail, name='platform_detail'),
 ]

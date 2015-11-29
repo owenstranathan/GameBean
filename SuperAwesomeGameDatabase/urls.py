@@ -18,6 +18,7 @@ from django.contrib import admin
 from GameBean import views
 
 urlpatterns = [
+    url(r'^$', views.home, name='home'),
     url(r'^GameBean/', include('GameBean.urls')),
     url(r'^admin/', include(admin.site.urls)),
 

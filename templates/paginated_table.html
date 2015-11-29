@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block head_title %}{% endblock %}
 
+
 {% block content %}
+
+{%block optional_detail %}{%endblock%}
 
 <div class="page-header">
     <h1>{% block page-header %}{% endblock page-header %}</h1>
@@ -11,8 +14,10 @@
 
     <div class="pagination" style="margin:10px 10px 10px 10px">
         <ul class="pagination">
+            {% if paginator.number > 4%}
+                <li><a href="?page={{paginator.number|add:"-4"}}"><<</a></li>
+            {% endif %}
             {% if paginator.number > 3 %}
-                <li><a href="?page={{paginator.number|add:"-6"}}"><<</a></li>
                 <li><a href="?page={{paginator.number|add:"-3"}}"> {{paginator.number|add:"-3"}} </a></li>
             {%endif %}
 
@@ -25,11 +30,19 @@
 
             <li class="active"><a href="#">{{paginator.number}}</a></li>
 
-            <li><a href="?page={{paginator.number|add:"1"}}">{{paginator.number|add:"1"}}</a></li>
-            <li><a href="?page={{paginator.number|add:"2"}}">{{paginator.number|add:"2"}}</a></li>
-            <li><a href="?page={{paginator.number|add:"3"}}">{{paginator.number|add:"3"}}</a></li>
+            {% if paginator.number|add:"1" <= paginator.paginator.num_pages %}
+                <li><a href="?page={{paginator.number|add:"1"}}">{{paginator.number|add:"1"}}</a></li>
+            {% endif %}
 
-            {% if paginator.number|add:"3" < paginator.paginator.num_pages %}
+            {% if paginator.number|add:"2" <= paginator.paginator.num_pages %}
+                <li><a href="?page={{paginator.number|add:"2"}}">{{paginator.number|add:"2"}}</a></li>
+            {% endif %}
+
+            {% if paginator.number|add:"3" <= paginator.paginator.num_pages %}
+                <li><a href="?page={{paginator.number|add:"3"}}">{{paginator.number|add:"3"}}</a></li>
+            {% endif %}
+
+            {% if paginator.number|add:"4" < paginator.paginator.num_pages %}
                 <li><a href="?page={{paginator.number|add:"6"}}">>></a></li>
             {% endif %}
         </ul>
@@ -56,8 +69,11 @@
 
     <div class="pagination" style="margin:10px 10px 10px 10px">
         <ul class="pagination">
+            <li> {{paginator.num_pages}} </li>
+            {% if paginator.number > 4%}
+                <li><a href="?page={{paginator.number|add:"-4"}}"><<</a></li>
+            {% endif %}
             {% if paginator.number > 3 %}
-                <li><a href="?page={{paginator.number|add:"-6"}}"><<</a></li>
                 <li><a href="?page={{paginator.number|add:"-3"}}"> {{paginator.number|add:"-3"}} </a></li>
             {%endif %}
 
@@ -70,11 +86,19 @@
 
             <li class="active"><a href="#">{{paginator.number}}</a></li>
 
-            <li><a href="?page={{paginator.number|add:"1"}}">{{paginator.number|add:"1"}}</a></li>
-            <li><a href="?page={{paginator.number|add:"2"}}">{{paginator.number|add:"2"}}</a></li>
-            <li><a href="?page={{paginator.number|add:"3"}}">{{paginator.number|add:"3"}}</a></li>
+            {% if paginator.number|add:"1" <= paginator.paginator.num_pages %}
+                <li><a href="?page={{paginator.number|add:"1"}}">{{paginator.number|add:"1"}}</a></li>
+            {% endif %}
 
-            {% if paginator.number|add:"3" < paginator.paginator.num_pages %}
+            {% if paginator.number|add:"2" <= paginator.paginator.num_pages %}
+                <li><a href="?page={{paginator.number|add:"2"}}">{{paginator.number|add:"2"}}</a></li>
+            {% endif %}
+
+            {% if paginator.number|add:"3" <= paginator.paginator.num_pages %}
+                <li><a href="?page={{paginator.number|add:"3"}}">{{paginator.number|add:"3"}}</a></li>
+            {% endif %}
+
+            {% if paginator.number|add:"4" < paginator.paginator.num_pages %}
                 <li><a href="?page={{paginator.number|add:"6"}}">>></a></li>
             {% endif %}
         </ul>

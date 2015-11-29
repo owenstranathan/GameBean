@@ -13,6 +13,9 @@ class Company(models.Model):
     def __str__(self):
         return unicode(self.name)
 
+    def __unicode__(self):
+        return self.name
+
 class Genre(models.Model):
     id = models.IntegerField(blank=False, null=False, primary_key=True)
     name = models.CharField(max_length=100)
@@ -21,6 +24,9 @@ class Genre(models.Model):
 
     def __str__(self):
         return unicode(self.name)
+
+    def __unicode__(self):
+        return self.name
 
 class Platform(models.Model):
     id = models.IntegerField(blank=False, null=False, primary_key=True)
@@ -34,6 +40,8 @@ class Platform(models.Model):
     def __str__(self):
         return unicode(self.name)
 
+    def __unicode__(self):
+        return self.name
 
 class Game(models.Model):
     id = models.IntegerField(blank=False, null=False, primary_key=True)
@@ -50,6 +58,9 @@ class Game(models.Model):
     def __str__(self):
         return unicode(self.name)
 
+    def __unicode__(self):
+        return self.name
+
 
 class Review(models.Model):
     topic = models.CharField(blank=True, max_length=200)
@@ -59,3 +70,7 @@ class Review(models.Model):
 
     def __str__(self):
         return unicode(reviewer.username)
+
+
+    def __unicode__(self):
+        return self.name

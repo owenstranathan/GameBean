@@ -97,3 +97,38 @@ def developerDetail(request, developer_name):
 
     context = { 'detail_item' : developer, 'paginator' : paginator,}
     return render(request, "GameBean/developer_detail.html", context)
+
+
+def platformsIndex(request):
+    platform_list = Platform.objects.order_by('id',)
+    paginator_obj = Paginator(platform_list, 50) # show 50 developers at a time
+    page = request.GET.get('page')
+    try:
+        paginator = paginator_obj.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        paginator = paginator_obj.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        paginator = paginator_obj.page(paginator.num_pages)
+
+    context = { 'paginator' : paginator,}
+    return render(request, 'GameBean/platforms.html', context)
+
+def platformDetail(request, platform_name):
+    platform = get_object_or_404(Platform, name=platform_name)
+    games = Game.objects.filter(platforms=platform).order_by('id',)
+    paginator_obj = Paginator(games, 50)
+    page = request.GET.get('page')
+
+    try:
+        paginator = paginator_obj.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        paginator = paginator_obj.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        paginator = paginator_obj.page(paginator.num_pages)
+
+    context = { 'detail_item' : platform, 'paginator' : paginator,}
+    return render(request, "GameBean/developer_detail.html", context)
