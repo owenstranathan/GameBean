@@ -1,0 +1,36 @@
+
+{% extends "paginated_table.html" %}
+{% load GameBeanExtras %}
+{% block head_title %}Search Results{% endblock %}
+
+
+{% block page-header %}
+Search for <strong style="color:#4CFF00">{{searchTerms}}</strong> returned <strong style="color:#4CFF00">{{number_of_entries}}</strong> Results
+{% endblock page-header %}
+
+{%block table_head %}
+    <th>Name</th>
+    <th>Group</th>
+{% endblock %}
+{%block table_body %}
+    {% for result in paginator %}
+        <tr>
+            {% if result|class_name == 'Game' %}
+                <td> <a href="{% url 'game_detail' result.name %}">  {{result.name}} </a> </td>
+                <td> <a href="{% url 'game_detail' result.name %}">  {{result|class_name}} </a> </td>
+            {% endif %}
+            {% if result|class_name == 'Company' %}
+                <td> <a href="{% url 'developer_detail' result.name %}">  {{result.name}} </td>
+                <td> <a href="{% url 'developer_detail' result.name %}">{{result|class_name}} </td>
+            {% endif %}
+            {% if result|class_name == 'Platform' %}
+                <td> <a href="{% url 'platform_detail' result.name %}">  {{result.name}} </td>
+                <td> <a href="{% url 'platform_detail' result.name %}">{{result|class_name}} </td>
+            {% endif %}
+            {% if result|class_name == 'Genre' %}
+                <td> <a href="{% url 'genre_detail' result.name %}">  {{result.name}} </td>
+                <td> <a href="{% url 'genre_detail' result.name %}">{{result|class_name}} </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+{% endblock %}

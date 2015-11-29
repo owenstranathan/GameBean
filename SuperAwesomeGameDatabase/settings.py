@@ -38,6 +38,15 @@ SECRET_KEY = get_env_variable('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'incremental': True,
+    'root': {
+        'level': 'DEBUG',
+    },
+}
+
 ALLOWED_HOSTS = []
 
 
@@ -51,6 +60,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'GameBean',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (

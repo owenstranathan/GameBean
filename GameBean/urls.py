@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^Developers/(?P<developer_name>.+)/$', views.developerDetail, name='developer_detail'),
     url(r'^Platforms/$', views.platformsIndex, name='platforms'),
     url(r'^Platforms/(?P<platform_name>.+)/$', views.platformDetail, name='platform_detail'),
+    url(r'^Search/$', views.search, name='search'),
 ]

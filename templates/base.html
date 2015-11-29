@@ -48,9 +48,11 @@
                 <img style="display:inline" src="{% static 'GameBean64.png' %}"/>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
-            <form class="navbar-form navbar-right" role="form">
+            <form class="navbar-form navbar-right" action="{% url 'search' %}" role="form" method="post">
               <div class="form-group">
-                <input type="text" placeholder="Search GameBean" class="form-control">
+                <!-- <input type="text" placeholder="Search GameBean" class="form-control"> -->
+                {% csrf_token %}
+                {{form}}
               </div>
               <button type="submit" class="btn btn-success">Go</button>
             </form>
