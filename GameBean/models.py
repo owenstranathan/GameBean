@@ -65,7 +65,7 @@ class Game(models.Model):
 class Review(models.Model):
     topic = models.CharField(blank=True, max_length=200)
     text = models.CharField(blank=True, max_length=200)
-    reviewer = models.ForeignKey(User)
+    # reviewer = models.ForeignKey(User)
     game = models.ForeignKey(Game)
 
     def __str__(self):

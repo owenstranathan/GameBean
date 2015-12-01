@@ -5,13 +5,17 @@
 {% block page-header %}Games{% endblock page-header %}
 
 {%block table_head %}
-    <th>ID</th>
+    <th>Image</th>
     <th>Name</th>
 {% endblock %}
 {%block table_body %}
     {% for game in paginator %}
         <tr>
-            <td> <a href="{% url 'game_detail' game.name %}"> {{game.id}} </a> </td>
+            <td>
+                {% if game.image_url %}
+                    <img src="{{game.image_url}}" style="max-height:50px">
+                {% endif %}
+            </td>
             <td> <a href="{% url 'game_detail' game.name %}"> {{game.name}} </a> </td>
         </tr>
     {% endfor %}

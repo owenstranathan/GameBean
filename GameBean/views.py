@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 from .models import Company, Platform, Game, Review, Genre
 
-from .forms import SearchForm
+from .forms import SearchForm, ReviewForm
 
 from .utils import get_query
 
@@ -37,10 +37,24 @@ def gamesIndex(request):
     return render(request, "GameBean/games.html", context)
 
 def gameDetail(request, game_name):
-    game = get_object_or_404(Game, name=game_name)
+
     form = SearchForm()
+    game = get_object_or_404(Game, name=game_name)
+    reviewForm = ReviewForm()
+
+    if request.method == 'POST':
+        reviewForm = ReviewForm(request.POST)
+        if reviewForm.is_valid():
+            topic = reviewForm.cleaned_data["topic"]
+            text = reviewForm.cleaned_data["text"]
+            review = Review(topic=topic, text=text, game=game)
+            review.save()
+
+    reviews = Review.objects.filter(game=game)
     context = {'game': game,
-               'form' : form,}
+               'form' : form,
+               'reviewForm' : reviewForm,
+               'reviews' : reviews, }
     return render(request, 'GameBean/game_detail.html', context )
 
 def genresIndex(request):
