@@ -61,16 +61,29 @@ class Game(models.Model):
     def __unicode__(self):
         return self.name
 
+def content_file_name(instance, filename):
+    return '/'.join(['content', instance.user.id, filename])
 
-class Review(models.Model):
-    topic = models.CharField(blank=True, max_length=200)
-    text = models.CharField(blank=True, max_length=200)
-    # reviewer = models.ForeignKey(User)
-    game = models.ForeignKey(Game)
+class GameSprout(models.Model):
+    user = models.OneToOneField(User)
+    games = models.ManyToManyField(Game)
+    platforms = models.ManyToManyField(Platform)
+    image = models.ImageField(null=True, upload_to=content_file_name)
+    joined = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return unicode(reviewer.username)
+        return unicode(self.user.username)
 
+class Review(models.Model):
+    title = models.CharField(blank=False, max_length=200)
+    text = models.CharField(blank=False, max_length=100000)
+    reviewer = models.ForeignKey(User)
+    game = models.ForeignKey(Game)
+    featured = models.BooleanField(default=False)
+    publish_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return unicode(reviewer.username+"_"+self.title)
 
     def __unicode__(self):
-        return self.name
+        return self.title

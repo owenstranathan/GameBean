@@ -22,18 +22,16 @@
 </div>
 <div class=" container col-sm-8 btn-group">
     {% for platform in game.platforms.all %}
-        <button type="button" class="btn btn-info btn-xs" href="{% url 'platform_detail' platform %}" style="display:inline-block;"> {{ platform }} </a>
+        <a class="btn btn-info btn-xs" href="{% url 'platform_detail' platform %}" style="display:inline-block;"> {{ platform }} </a>
     {% endfor %}
 </div>
-
-
 
 <div class="container col-sm-12">
 <h3>
     Developers:
-    <div class="well">
+    <div class="well container btn-group">
         {% for dev in game.developers.all %}
-            <a href="{% url 'developer_detail' dev %}" style="border:1px solid lightgreen; display:inline-block; padding:2px 2px 2px 2px">{{ dev }}</a>
+            <a class="btn btn-success btn-md" href="{% url 'developer_detail' dev %}" style="display:inline-block;">{{ dev }}</a>
         {% endfor %}
     </div>
 </h3>
@@ -48,15 +46,20 @@
     {{ game.description }}
   {% endautoescape %}
 </div>
-
 <div class="well">
     <h3>Write a review</h3>
+    {% if user.is_authenticated %}
     <form class="form-group" role="form" method="post">
         {% csrf_token %}
         {{reviewForm}}
         <button type="submit" class="btn btn-success">Save Review</button>
     </form>
+    {% else %}
+      <p> <a class="btn btn-sm btn-success" href="{% url 'login' %}">login</a> or <a class="btn btn-sm btn-success" href="#">sign up</a> to write a review</p>
+    {% endif %}
 </div>
+
+
 
 <div class="well">
     <h2> Other user reviews</h2>
@@ -66,4 +69,5 @@
             <p> {{review.text}} </p>
         </div>
     {% endfor %}
+</div>
 {% endblock %}

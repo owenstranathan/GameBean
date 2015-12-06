@@ -1,21 +1,131 @@
-from django.shortcuts import render, get_object_or_404
+"""USER AUTHENTICATION"""
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as django_login
+from django.contrib.auth import logout as django_logout
+from django.contrib.auth.models import User
+from .forms import LoginForm, SignUpForm
+
+"""USER PROFILES"""
+from .models import GameSprout
+
+"""Response"""
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
+
+"""PAGINATION"""
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from itertools import chain
 
+"""LOGGING"""
 import logging
 logger = logging.getLogger(__name__)
 
+"""GAMEBEAN"""
 from .models import Company, Platform, Game, Review, Genre
+from .forms import ReviewForm
 
-from .forms import SearchForm, ReviewForm
-
+"""SEARCHING"""
+from .forms import SearchForm
 from .utils import get_query
 
+"""MESSAGING"""
+from django.contrib import messages
+from django.contrib.messages import get_messages
 
 def home(request):
     form = SearchForm()
-    return render(request, "GameBean/index.html", {'form' : form})
+    return render(request, "GameBean/index.html", {'form' : form, 'user':request.user, })
+
+def login(request):
+    form = SearchForm()
+    has_error = False
+    error = ""
+    if request.method == 'GET':
+        loginForm = LoginForm()
+        # return render(request, "GameBean/login.html", context)
+    elif request.method == 'POST':
+        print "biggyfarts"
+        # construct login from
+        loginForm = LoginForm(request.POST)
+        # validate form
+        if loginForm.is_valid():
+            # get form fields
+            username = loginForm.cleaned_data['username']
+            password = loginForm.cleaned_data['password']
+
+            # authenticate user
+            user = authenticate(username=username, password=password)
+
+            # if the user is authenticated
+            if user is not None:
+                print "Biggyfarts 2"
+                # login the user (uses session/provided by django)
+                django_login(request, user)
+                #redirect to home
+                messages.success(request, "<strong>Login Successful!</strong> Welcome " + user.username)
+                return redirect('home')
+            # if authentication fails
+            else:
+                # figure out why
+                has_error = True
+                try:
+                    user = User.objects.get(username=username)
+                    #invalid password
+                    if user is not None:
+                        error = "Invalid Password for username " + username
+                #invalid username
+                except User.DoesNotExist:
+                    error = "User for username " + username + " not found."
+        else:
+            # fail because of incomplete form
+            has_error = True
+            error = "Login form must be filled correctly"
+
+    context = {'form': form, 'loginForm' : loginForm, 'has_error': has_error, 'error' : error}
+
+    return render(request, "GameBean/login.html", context)
+
+def logout(request):
+    django_logout(request)
+    return redirect('home')
+
+def signUp(request):
+    form = SearchForm()
+    has_error = False
+    error = ""
+    if request.method == 'GET':
+        signUpForm = SignUpForm()
+
+    elif request.method == 'POST':
+        signUpForm = SignUpForm(request.POST)
+        if signUpForm.is_valid():
+            email = signUpForm.cleaned_data["email"]
+            username = signUpForm.cleaned_data["username"]
+            password = signUpForm.cleaned_data["password"]
+            confirmation_password = signUpForm.cleaned_data["confirmation_password"]
+            if confirmation_password != password:
+                has_error = True
+                error = "confirmation password and password differ, please ensure they are the same"
+            else:
+                try:
+                    # this will fail if the user is not in the database
+                    user = User.objects.get(username=username)
+                except User.DoesNotExist:
+                    user = User.objects.create_user(username, email=email, password=password)
+                    user = authenticate(username=username, password=password)
+                    django_login(request, user)
+                    game_sprout = GameSprout(user=user)
+                    game_sprout.save()
+                    messages.success(request, '<strong>Profile <span style="color:#33cc33">' + username + '</span> created successfully!</strong> Welcome to GameBean!')
+                    return redirect('home')
+
+                has_error = True
+                error = "User with username " + username + " already exists, please try another name."
+
+
+
+    context = { 'form' : form, 'signUpForm' : signUpForm, 'has_error': has_error, 'error' : error}
+    return render(request, "GameBean/sign_up.html", context)
 
 def gamesIndex(request):
     games = Game.objects.order_by('id',)
@@ -32,7 +142,9 @@ def gamesIndex(request):
         paginator = paginator_obj.page(paginator.num_pages)
 
     context = { 'paginator' : paginator,
-                'form' : form, }
+                'form' : form,
+                'user':request.user,
+                }
 
     return render(request, "GameBean/games.html", context)
 
@@ -54,7 +166,9 @@ def gameDetail(request, game_name):
     context = {'game': game,
                'form' : form,
                'reviewForm' : reviewForm,
-               'reviews' : reviews, }
+               'reviews' : reviews,
+               'user':request.user,
+               }
     return render(request, 'GameBean/game_detail.html', context )
 
 def genresIndex(request):
@@ -72,7 +186,9 @@ def genresIndex(request):
         paginator = paginator_obj.page(paginator.num_pages)
 
     context = { 'paginator' : paginator,
-                'form' : form,}
+                'form' : form,
+                'user':request.user,
+                }
 
     return render(request, 'GameBean/genres.html', context)
 
@@ -95,7 +211,9 @@ def genreDetail(request, genre_name):
 
     context = { 'detail_item' : genre,
                 'paginator' : paginator,
-                'form' : form,}
+                'form' : form,
+                'user':request.user,
+                }
 
     return render(request, 'GameBean/genre_detail.html', context)
 
@@ -114,7 +232,9 @@ def developersIndex(request):
         paginator = paginator_obj.page(paginator.num_pages)
 
     context = { 'paginator' : paginator,
-                'form' : form,}
+                'form' : form,
+                'user':request.user,
+                }
 
     return render(request, 'GameBean/developers.html', context)
 
@@ -136,7 +256,9 @@ def developerDetail(request, developer_name):
 
     context = { 'detail_item' : developer,
                 'paginator' : paginator,
-                'form' : form,}
+                'form' : form,
+                'user':request.user,
+                }
 
     return render(request, "GameBean/developer_detail.html", context)
 
@@ -156,7 +278,9 @@ def platformsIndex(request):
         paginator = paginator_obj.page(paginator.num_pages)
 
     context = { 'paginator' : paginator,
-                'form' : form,}
+                'form' : form,
+                'user':request.user,
+                }
 
     return render(request, 'GameBean/platforms.html', context)
 
@@ -178,7 +302,9 @@ def platformDetail(request, platform_name):
 
     context = { 'detail_item' : platform,
                 'paginator' : paginator,
-                'form' : form,}
+                'form' : form,
+                'user':request.user,
+                }
     return render(request, "GameBean/developer_detail.html", context)
 
 def search(request):
@@ -221,7 +347,9 @@ def search(request):
     context = { 'paginator' : paginator,
                 'searchTerms': searchTerms,
                 'number_of_entries': len(found_entries),
-                'form' : form, }
+                'form' : form,
+                'user':request.user,
+                }
 
     response = render(request, 'GameBean/search_results.html', context)
     response.set_cookie('searchTerms', searchTerms)

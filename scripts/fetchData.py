@@ -9,6 +9,7 @@ import sys
 import traceback
 import pytz
 import time
+import os
 
 from GameBean.models import Company, Platform, Game, Genre
 from django.utils.dateparse import parse_datetime
@@ -24,9 +25,12 @@ def get_env_variable(var_name):
 
 
 api_url = "http://www.giantbomb.com/api/"
-api_key = get_env_variable(API_KEY)
+api_key = "4d0b8b3fa860fa184fce607c54f462e564df371c"
+api_key_1 = "20ffa5bf7ef3318ab9bfa92bb62fe24ea35e68ad"
+# get_env_variable('API_KEY')
 encoding_format = 'json'
 
+api_keys = [api_key, api_key_1]
 
 fields = {
     "games" : ("api_detail_url", "original_release_date",),
@@ -87,7 +91,7 @@ def onGame(json_object, offset):
             json = r.json()
             print json["error"]
             results = json["results"]
-            print results
+            print results["id"]
             id = results["id"]
             name = unicode(results["name"])
             developers = []

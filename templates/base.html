@@ -8,10 +8,11 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>{% block head_title %}{% endblock %}</title>
-        <link rel="shortcut icon" href="{% static 'GameBean.png' %}" type="image/x-icon">
+        <link rel="shortcut icon" href="{% static 'GB.png' %}" type="image/x-icon">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
 
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
         <style>
@@ -44,10 +45,51 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-                <a class="navbar-brand" href="{% url 'home' %}">GameBean</a>
-                <img style="display:inline" src="{% static 'GameBean64.png' %}"/>
+                <a href = "{% url 'home' %}">
+                <img style="display:inline " src="{% static 'GameBean64.png' %}"/>
+                <img style="display:inline; margin-left:-35px" src="{% static 'GameBeanTitle.png' %}" width=300/>
+                </a>
+                <!-- <a class="navbar-brand" href="{% url 'home' %}">GameBean</a> -->
           </div>
           <div id="navbar" class="navbar-collapse collapse">
+
+            <!-- {% if user.is_authenticated %}
+
+            {% else %}
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" ><span class="glyphicon glyphicon-user" style="color:#66ff33"></span> Sign Up</a></li>
+                <li><a href="#" ><span class="glyphicon glyphicon-log-in" style="color:#66ff33"></span> Login</a></li>
+              </ul>
+            {%endif%} -->
+
+            {%if user.is_authenticated %}
+              <ul class="nav navbar-nav navbar-right">
+                <li>
+                  <a style="color:white">
+                    <span> Welcome! <span style="color:#33cc33; text-transform:uppercase;">{{user.username}}</span></span>
+                  <a>
+                <li>
+                <li><a href="#" ><span class="glyphicon glyphicon-user" style="color:#66ff33"></span>Profile</a></li>
+                <li><a href="{%url 'logout' %}" ><span class="glyphicon glyphicon-log-out" style="color:#66ff33"></span> Logout</a></li>
+              </ul>
+            {% else %}
+              <ul class="nav navbar-nav navbar-right">
+                <li>
+                  <!-- <form class="nav navbar-form navbar-right" action="#" role="form" method="post">
+                  <div class="form-group">
+                    <input type="text" placeholder="username" class="form-control">
+                    <input type="text" placeholder="password" class="form-control">
+                    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-log-in"></span> Login</button>
+                  </div> -->
+                </li>
+                <li><a href="{% url 'login' %}" ><span class="glyphicon glyphicon-log-in" style="color:#66ff33"></span> Login</a></li>
+
+
+                <!-- <li><a style="color:white"> <span> OR </span></a></li> -->
+                <li><a href="{% url 'sign_up' %}" ><span class="glyphicon glyphicon-user" style="color:#66ff33"></span> Sign Up</a></li>
+              </ul>
+            {% endif %}
+
             <form class="navbar-form navbar-right" action="{% url 'search' %}" role="form" method="post">
               <div class="form-group">
                 <!-- <input type="text" placeholder="Search GameBean" class="form-control"> -->
@@ -66,7 +108,7 @@
     <hr>
     <div class="container">
       <footer>
-        <p>&copy; Company 2015</p>
+        <p>&copy; GameBean 2015</p>
       </footer>
     </div> <!-- /container -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

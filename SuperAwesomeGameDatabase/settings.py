@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'GameBean',
     'debug_toolbar',
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -131,3 +132,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+
+#MEDIA
+MEDIA_ROOT = os.path.join(BASE_DIR,"GameBean/media")

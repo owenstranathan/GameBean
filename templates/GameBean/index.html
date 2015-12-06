@@ -3,8 +3,17 @@
 
 
 {% block content %}
+
   <!-- Main jumbotron for a primary marketing message or call to action -->
   <div class="jumbotron">
+    {% if messages %}
+      {% for message in messages%}
+            <div class="alert alert-success fade in">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              {{message|safe}}
+            </div>
+      {% endfor %}
+    {% endif %}
     <div class="container">
       <h1>Welcome to GameBean!</h1>
       <p>GameBean is a huge database of Video games, all the data comes from Giantbomb's generous API which exposes their game database. GameBean is an Open Source project. Get started by searching for a game or you can browse the game directory. ENJOY!</p>

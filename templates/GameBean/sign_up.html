@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block head_title %}Login{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+  <div style="width:500px; display:block; margin-left:auto; margin-right:auto; margin-top:40px">
+    <div class="well center-block">
+      <form class="well" method="post">
+        <h2 class="form-title">Login</h2>
+        {% if has_error %}
+          <div class="alert alert-warning">
+            {{error}}
+          </div>
+        {% endif %}
+        {% csrf_token %}
+        {{signUpForm|crispy}}
+        <input type="hidden" name="form-type" value="contact-form" />
+        <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-log-in"></span>Sign Up</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

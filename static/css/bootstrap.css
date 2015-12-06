@@ -937,9 +937,12 @@ img {
 .img-responsive,
 .thumbnail > img,
 .thumbnail a > img,
-.carousel-inner > .item > img,
+.carousel-inner > .item > img{
+  margin: 0 auto;
+}
 .carousel-inner > .item > a > img {
   display: block;
+  margin: 0 auto;
   max-width: 100%;
   height: auto;
 }

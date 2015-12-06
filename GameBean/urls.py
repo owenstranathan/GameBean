@@ -13,4 +13,7 @@ urlpatterns = [
     url(r'^Platforms/$', views.platformsIndex, name='platforms'),
     url(r'^Platforms/(?P<platform_name>.+)/$', views.platformDetail, name='platform_detail'),
     url(r'^Search/$', views.search, name='search'),
+    url(r'^Login/$', views.login, name='login'),
+    url(r'^Logout/$', views.logout, name='logout'),
+    url(r'^SignUp/$', views.signUp, name='sign_up'),
 ]
