@@ -81,9 +81,19 @@ class Review(models.Model):
     game = models.ForeignKey(Game)
     featured = models.BooleanField(default=False)
     publish_date = models.DateTimeField(auto_now_add=True)
+    # votes = models.IntegerField(default=0)
+    
 
     def __str__(self):
         return unicode(reviewer.username+"_"+self.title)
 
     def __unicode__(self):
         return self.title
+
+# class ReviewVoter(models.Model):
+#     user = models.ForeignKey(User)
+#     review = models.ForeignKey(Review)
+#
+# class GameVoter(models.Model):
+#     user = models.ForeignKey(User)
+#     game = models.ForeignKey(Game)

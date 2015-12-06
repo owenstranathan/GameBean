@@ -64,12 +64,12 @@
 
             {%if user.is_authenticated %}
               <ul class="nav navbar-nav navbar-right">
-                <li>
+                <!-- <li>
                   <a style="color:white">
-                    <span> Welcome! <span style="color:#33cc33; text-transform:uppercase;">{{user.username}}</span></span>
+                    <span> Logged in as <span style="color:#33cc33;">{{user.username}}</span></span>
                   <a>
-                <li>
-                <li><a href="#" ><span class="glyphicon glyphicon-user" style="color:#66ff33"></span>Profile</a></li>
+                <li> -->
+                <li><a href="{% url 'profile' user.username%}" ><span class="glyphicon glyphicon-user" style="color:#66ff33"></span>{{user.username}}</a></li>
                 <li><a href="{%url 'logout' %}" ><span class="glyphicon glyphicon-log-out" style="color:#66ff33"></span> Logout</a></li>
               </ul>
             {% else %}

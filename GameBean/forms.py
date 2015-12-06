@@ -18,3 +18,6 @@ class SignUpForm(forms.Form):
     username = forms.CharField(max_length = 200,  widget=forms.TextInput(attrs={'class' : 'form-control', 'placeholder':'username'}))
     password = forms.CharField(max_length = 15,  widget=forms.PasswordInput(attrs={'class' : 'form-control', 'placeholder':'password'}))
     confirmation_password = forms.CharField(max_length = 15,  widget=forms.PasswordInput(attrs={'class' : 'form-control', 'placeholder':'confirm password'}))
+
+class ProfileImageForm(forms.Form):
+    image= forms.ImageField(label="Change profile image")

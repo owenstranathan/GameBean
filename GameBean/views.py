@@ -7,6 +7,7 @@ from .forms import LoginForm, SignUpForm
 
 """USER PROFILES"""
 from .models import GameSprout
+from .forms import ProfileImageForm
 
 """Response"""
 from django.shortcuts import render, get_object_or_404, redirect
@@ -21,8 +22,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 """GAMEBEAN"""
-from .models import Company, Platform, Game, Review, Genre
+from .models import Company, Platform, Game, Genre
 from .forms import ReviewForm
+
+"""REVIEWING"""
+from .models import Review#, ReviewVoter
+
+"""GAME VOTING"""
+# from .models import GameVoter
 
 """SEARCHING"""
 from .forms import SearchForm
@@ -62,7 +69,7 @@ def login(request):
                 # login the user (uses session/provided by django)
                 django_login(request, user)
                 #redirect to home
-                messages.success(request, "<strong>Login Successful!</strong> Welcome " + user.username)
+                messages.add_message(request, messages.INFO, "<strong>Login Successful!</strong> Welcome " + user.username,  extra_tags="alert alert-success fade in")
                 return redirect('home')
             # if authentication fails
             else:
@@ -116,7 +123,7 @@ def signUp(request):
                     django_login(request, user)
                     game_sprout = GameSprout(user=user)
                     game_sprout.save()
-                    messages.success(request, '<strong>Profile <span style="color:#33cc33">' + username + '</span> created successfully!</strong> Welcome to GameBean!')
+                    messages.add_message(request, messages.INFO, '<strong>Profile <span style="color:#33cc33">' + username + '</span> created successfully!</strong> Welcome to GameBean!',  extra_tags="alert alert-success fade in")
                     return redirect('home')
 
                 has_error = True
@@ -126,6 +133,54 @@ def signUp(request):
 
     context = { 'form' : form, 'signUpForm' : signUpForm, 'has_error': has_error, 'error' : error}
     return render(request, "GameBean/sign_up.html", context)
+
+def profile(request, username):
+    if request.method == 'POST':
+        imageForm = ProfileImageForm(request.POST)
+        if imageForm.is_valid():
+            image = imageForm.cleaned_data["image"]
+            user = User.objects.get(username=username)
+            game_sprout = GameSprout.objects.get(user=user)
+            game_sprout.image = image
+            game_sprout.save()
+            messages.succes(request, "<strong>Profile image updated!</strong> congratulations, you interneted!", extra_tags="alert alert-success fade in")
+
+    imageForm = ProfileImageForm()
+    has_reviews = True
+    reviews = []
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        messages.add_message(request, messages.INFO, "<strong>Sorry duder</strong> that user couldn't be found, you probably typed it wrong... yeah that's what it is, it's your fault. Contact admin if your sure you're right. Buy you're probably wrong. Just sayin'", extra_tags="alert alert-warning fade in")
+        redirect('home')
+    try:
+        game_sprout = GameSprout.objects.get(user=user)
+    except GameSprout.DoesNotExist:
+        messages.add_message(request, messages.INFO, "<strong>Sorry duder</strong> that user couldn't be found, weird... If this keeps happening erroneously contact admin.", extra_tags="alert alert-warning fade in")
+        redirect('home')
+
+    # get user's reviews
+    reviews = Review.objects.filter(reviewer=user).order_by('publish_date',)
+    # if there are no reviews set flag so message can be diplayed
+    if not reviews:
+        has_reviews = False
+
+    form = SearchForm()
+
+    context = {
+        'form' : form,
+        'user' : request.user,
+        'profile_user' : user,
+        'game_sprout' : game_sprout,
+        'has_reviews' : has_reviews,
+        'reviews' : reviews,
+        'imageForm' : imageForm,
+    }
+
+    return render(request, "GameBean/profile.html", context)
+
+
+
 
 def gamesIndex(request):
     games = Game.objects.order_by('id',)
@@ -149,7 +204,8 @@ def gamesIndex(request):
     return render(request, "GameBean/games.html", context)
 
 def gameDetail(request, game_name):
-
+    has_error = False
+    error = ""
     form = SearchForm()
     game = get_object_or_404(Game, name=game_name)
     reviewForm = ReviewForm()
@@ -157,17 +213,24 @@ def gameDetail(request, game_name):
     if request.method == 'POST':
         reviewForm = ReviewForm(request.POST)
         if reviewForm.is_valid():
-            topic = reviewForm.cleaned_data["topic"]
-            text = reviewForm.cleaned_data["text"]
-            review = Review(topic=topic, text=text, game=game)
-            review.save()
+            try:
+                review = Review.objects.get(reviewer=request.user, game=game)
+                has_error = True
+                error = "<strong>Woah there duder!</strong> You can't review "+ game.name + " more than once my man! Try writing a review for another game."
+            except Review.DoesNotExist:
+                title = reviewForm.cleaned_data["title"]
+                text = reviewForm.cleaned_data["text"]
+                review = Review(title=title, text=text, reviewer=request.user, game=game)
+                review.save()
 
     reviews = Review.objects.filter(game=game)
     context = {'game': game,
                'form' : form,
                'reviewForm' : reviewForm,
                'reviews' : reviews,
-               'user':request.user,
+               'user': request.user,
+               'has_error' : has_error,
+               'error' : error,
                }
     return render(request, 'GameBean/game_detail.html', context )
 

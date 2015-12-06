@@ -88,6 +88,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -116,7 +117,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 
@@ -136,3 +137,4 @@ STATICFILES_DIRS = (
 
 #MEDIA
 MEDIA_ROOT = os.path.join(BASE_DIR,"GameBean/media")
+MEDIA_URL = "GameBean/media/"

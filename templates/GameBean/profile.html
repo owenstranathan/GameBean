@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block head_title %}{{user.username}}{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+  <div class="jumbotron col-lg-12">
+    <div width=300 height=300 style="display:inline">
+      <img style="width:25%; height:25%" class="img-rounded" src="{{game_sprout.image}}">
+      {% if user == profile_user and user.is_authenticated %}
+        <form role="form" class="form-group" method="post" action="#">
+          {%csrf_token%}
+          {{imageForm|crispy}}
+          <button type="submit">Save</button>
+        </form>
+      {% endif %}
+    </div>
+      <h1>{{user.username}}</h1>
+    <p><span> Gamesprout since {{game_sprout.joined}}
+  </div>
+
+  <div class="well">
+    <h3>{{profile_user.username}}'s reviews </h3>
+    {% for review in reviews %}
+        <div class="jumbotron well">
+            <p><span>Review of <a href="{% url 'game_detail' review.game.name %}"><span>{{review.game.name}}</span></a></span>
+            </br>
+            <span style="font-family:Verdana; font-size:10px"><strong>published</strong> {{review.publish_date}}</span></p>
+            <div class="well">
+              <h3> {{review.title}} </h3>
+              <p> {{review.text|safe}} </p>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
