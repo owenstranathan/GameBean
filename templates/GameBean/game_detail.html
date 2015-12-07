@@ -11,7 +11,7 @@
     </div>
   {% endif %}
 
-    <div class="container col-sm-3">
+    <div class="container col-sm-4">
         {% if game.image_url %}
             <img src="{{game.image_url}}" class="img-rounded" style="max-height:200px">
         {% endif %}
@@ -23,7 +23,7 @@
             {% endif %}
     </div>
 </div>
-
+<div class="col-sm-12">
 <div class="container col-sm-4">
     <a href="{{game.giant_bomb_link}}">view on giant bomb</a>
 </div>
@@ -32,13 +32,14 @@
         <a class="btn btn-info btn-xs" href="{% url 'platform_detail' platform %}" style="display:inline-block;"> {{ platform }} </a>
     {% endfor %}
 </div>
+<div>
 <div class="container col-sm-12">
-  UP/DOWN buttons
+  UP/DOWN VOTE
 </div>
 <div class="container col-sm-12">
 <h3>
     Developers:
-    <div class="well container btn-group">
+    <div class="container well btn-group">
         {% for dev in game.developers.all %}
             <a class="btn btn-success btn-md" href="{% url 'developer_detail' dev %}" style="display:inline-block;">{{ dev }}</a>
         {% endfor %}
@@ -48,14 +49,14 @@
 
 <br/>
 
-<div class="container" style="padding: 10px 10px 10px 20px">
+<div class="container well col-sm-12" style="padding: 10px 10px 10px 20px">
   <span style="font-family:Consolas; font-size:24px"> Description: </span>
   <br/>
   {% autoescape off %}
-    {{ game.description }}
+    {{ game.description|removetags:"a" }}
   {% endautoescape %}
 </div>
-<div class="well">
+<div class="well col-lg-12">
     <h3>Write a review</h3>
     <p> Use html syntax to style your review, or just type like a mad man with no regard for style to achieve WALLOFTEXT</p>
     {% if user.is_authenticated %}
@@ -65,16 +66,17 @@
         <button type="submit" class="btn btn-success">Save Review</button>
     </form>
     {% else %}
-      <p> <a class="btn btn-sm btn-success" href="{% url 'login' %}">login</a> or <a class="btn btn-sm btn-success" href="#">sign up</a> to write a review</p>
+      <p> <a class="btn btn-sm btn-success" href="{% url 'login' %}">login</a> or <a class="btn btn-sm btn-success" href="{% url 'sign_up'%}">sign up</a> to write a review</p>
     {% endif %}
 </div>
 
 
 
-<div class="well">
-    <h2> Other user reviews</h2>
+<div class="well col-lg-12">
+    <h2> Other user reviews for <span style="color:green">{{game.name}}</span></h2>
+    <hr style="width: 100%; height: 4px; background-color:green; color:#FF0066; border: 0 none;">
     {% for review in reviews %}
-        <div class="jumbotron well">
+        <div id="{{review.reviewer.username}}" class="jumbotron well">
             <p><span>Review by <a href="{% url 'profile' review.reviewer.username%}"><span class="glyphicon glyphicon-user"><span>{{review.reviewer.username}}</span></span></a></span>
             </br>
             <span style="font-family:Verdana; font-size:10px"><strong>published</strong> {{review.publish_date}}</span></p>

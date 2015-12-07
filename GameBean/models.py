@@ -54,6 +54,7 @@ class Game(models.Model):
     deck = models.CharField(blank=True, null=True, max_length=10000)
     description = models.CharField(blank=True, max_length=100000)
     giant_bomb_link = models.CharField(blank=True, max_length=200)
+    # upvotes = models.IntegerField(default=0)
 
     def __str__(self):
         return unicode(self.name)
@@ -82,7 +83,7 @@ class Review(models.Model):
     featured = models.BooleanField(default=False)
     publish_date = models.DateTimeField(auto_now_add=True)
     # votes = models.IntegerField(default=0)
-    
+
 
     def __str__(self):
         return unicode(reviewer.username+"_"+self.title)

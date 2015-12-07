@@ -5,13 +5,17 @@
 {% block page-header %}Developers{% endblock page-header %}
 
 {%block table_head %}
-    <th>ID</th>
-    <th>Name</th>
+  <th>Image</th>
+  <th>Name</th>
 {% endblock %}
 {%block table_body %}
     {% for dev in paginator %}
         <tr>
-            <td> <a href="{% url 'developer_detail' dev.name %}"> {{dev.id}} </a> </td>
+            <td>
+              {% if dev.image_url %}
+                  <img src="{{dev.image_url}}" style="max-height:50px">
+              {% endif %}
+            </td>
             <td> <a href="{% url 'developer_detail' dev.name %}"> {{dev.name}} </a> </td>
         </tr>
     {% endfor %}

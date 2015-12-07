@@ -1,23 +1,31 @@
 {% extends "base.html" %}
-{% block head_title %}{{user.username}}{% endblock %}
+{% block head_title %}{{profile_user.username}}{% endblock %}
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container">
   <div class="jumbotron col-lg-12">
     <div width=300 height=300 style="display:inline">
-      <img style="width:25%; height:25%" class="img-rounded" src="{{game_sprout.image}}">
+      <!-- <img style="width:25%; height:25%" class="img-rounded" src="{{game_sprout.image}}">
       {% if user == profile_user and user.is_authenticated %}
         <form role="form" class="form-group" method="post" action="#">
           {%csrf_token%}
           {{imageForm|crispy}}
           <button type="submit">Save</button>
         </form>
-      {% endif %}
+      {% endif %} -->
     </div>
-      <h1>{{user.username}}</h1>
+      <h1>{{profile_user.username}}</h1>
     <p><span> Gamesprout since {{game_sprout.joined}}
   </div>
-
+  <div class="container">
+    <h2>{{profile_user.username}}'s Platforms</h2>
+    <table>
+      {% for plat in profile_user.platforms %}
+        <td>
+    </table>
+  </div>
+  <div class="container">
+  </div>
   <div class="well">
     <h3>{{profile_user.username}}'s reviews </h3>
     {% for review in reviews %}

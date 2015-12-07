@@ -1,11 +1,25 @@
 {% extends "paginated_table.html" %}
 {% block head_title %}{% endblock %}
 
+{% load staticfiles %}
 
 {% block optional_detail %}
 <div class="jumbotron" style="padding:10px 10px 10px 10px">
     <!-- <img src="{{detail_item.image_url}}"/> -->
-    <h1> {{detail_item.name}} </h1>
+    <div class="container col-sm-4">
+        {% if detail_item.image_url %}
+            <img src="{{detail_item.image_url}}" class="img-rounded" style="max-height:200px; max-width:300px">
+        {% else %}
+            <img src="{% static 'no_image.png' %}" class="img-rounded" style="max-height:200px">
+        {% endif %}
+    </div>
+    <div class="container col-sm-8">
+        <h1>{{ detail_item.name }}
+        {% if detail_item.release_date %}
+            ( <span style="color:green">{{ detail_item.release_date.year }} </span>)</h1>
+        {% endif %}
+    </div>
+
     {% autoescape off %}
         {% if detail_item.deck %}
             <h2> <small> {{ detail_item.deck }} </small> </h2>

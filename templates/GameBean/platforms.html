@@ -4,13 +4,17 @@
 {% block page-header %}Platform{% endblock page-header %}
 
 {%block table_head %}
-    <th>ID</th>
+    <th>Image</th>
     <th>Name</th>
 {% endblock %}
 {%block table_body %}
     {% for plat in paginator %}
         <tr>
-            <td> <a href="{% url 'platform_detail' plat.name %}"> {{plat.id}} </a> </td>
+          <td>
+          {% if plat.image_url %}
+              <img src="{{plat.image_url}}" style="max-height:50px">
+          {% endif %}
+        </td>
             <td> <a href="{% url 'platform_detail' plat.name %}"> {{plat.name}} </a> </td>
         </tr>
     {% endfor %}

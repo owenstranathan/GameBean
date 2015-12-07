@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block head_title %}GameBean{% endblock %}
 
-
+{% load GameBeanExtras %}
 {% block content %}
 
-  <!-- Main jumbotron for a primary marketing message or call to action -->
+
+
   <div class="jumbotron">
     {% if messages %}
       {% for message in messages%}
@@ -15,12 +16,48 @@
       {% endfor %}
     {% endif %}
     <div class="container">
-      <h1>Welcome to GameBean!</h1>
-      <p>GameBean is a huge database of Video games, all the data comes from Giantbomb's generous API which exposes their game database. GameBean is an Open Source project. Get started by searching for a game or you can browse the game directory. ENJOY!</p>
-      <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more about GameBean &raquo;</a></p>
+
+    <style>
+      .review{
+        color:white;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+      }
+      .review_alt{
+        color:green;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+      }
+      .top_review-div{
+        -moz-background-size:100% 100%;
+        -webkit-background-size:100% 100%;
+        background-size:100% 100%;
+        height:300px;
+        border: 5px solid #333333;
+        border-style: ridge;
+
+      }
+    </style>
+    <div class="container ">
+        {% for review in reviews %}
+        <!-- <img width=200 height=200 src="{{review.game.image_url}}"> -->
+
+          <div class="container col-sm-6 top_review-div" style="background-image:url({{review.game.image_url}});">
+
+            <h2 class="review" >{{review.game.name}}</h2>
+            <h3 class="review">{{review.title}}</h3>
+            <h4 class="review" style="overflow: hidden; text-overflow: ellipsis;"> {{review.text}} </h4>
+            <h4 class="review"><span><strong>By</strong> <a style="text-shadow:none" href="{% url 'profile' review.reviewer.username %}">{{review.reviewer.username}}<a> </span></h4>
+            <a class="btn btn-primary btn-lg" href="/GameBean/Games/{{review.game.name}}/#{{review.reviewer.username}}">Read review&raquo;</a>
+            <!-- {% url 'game_detail' review.game.name%} -->
+          </div>
+          </a>
+        {% endfor %}
     </div>
   </div>
-
+  <div class="container">
+    <h1>Welcome to GameBean!</h1>
+    <p>GameBean is a huge database of Video games, all the data comes from Giantbomb's generous API which exposes their game database. GameBean is an Open Source project. Get started by searching for a game or you can browse the game directory. ENJOY!</p>
+    <p><a class="btn btn-primary btn-lg" href="{% url 'about' %}" role="button">Learn more about GameBean &raquo;</a></p>
+  </div>
   <div class="container">
     <!-- Example row of columns -->
     <div class="row">

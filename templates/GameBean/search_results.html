@@ -1,6 +1,7 @@
 
 {% extends "paginated_table.html" %}
 {% load GameBeanExtras %}
+{% load staticfiles %}
 {% block head_title %}Search Results{% endblock %}
 
 
@@ -9,6 +10,7 @@ Search for <strong style="color:#4CFF00">{{searchTerms}}</strong> returned <stro
 {% endblock page-header %}
 
 {%block table_head %}
+    <th>Image</th>
     <th>Name</th>
     <th>Group</th>
 {% endblock %}
@@ -16,18 +18,46 @@ Search for <strong style="color:#4CFF00">{{searchTerms}}</strong> returned <stro
     {% for result in paginator %}
         <tr>
             {% if result|class_name == 'Game' %}
+                <td>
+                  {%if result.image_url %}
+                    <img src="{{result.image_url}}" style="max-height:50px">
+                  {% else %}
+                    <img src="{%static 'no_image.png'%}" style="max-height:50px">
+                  {% endif %}
+                </td>
                 <td> <a href="{% url 'game_detail' result.name %}">  {{result.name}} </a> </td>
                 <td> <a href="{% url 'games'  %}">  {{result|class_name}} </a> </td>
             {% endif %}
             {% if result|class_name == 'Company' %}
+                <td>
+                  {%if result.image_url %}
+                    <img src="{{result.image_url}}" style="max-height:50px">
+                  {% else %}
+                    <img src="{%static 'no_image.png'%}" style="max-height:50px">
+                  {% endif %}
+                </td>
                 <td> <a href="{% url 'developer_detail' result.name %}">  {{result.name}} </td>
                 <td> <a href="{% url 'developers'  %}">{{result|class_name}} </td>
             {% endif %}
             {% if result|class_name == 'Platform' %}
+                <td>
+                  {%if result.image_url %}
+                    <img src="{{result.image_url}}" style="max-height:50px">
+                  {% else %}
+                    <img src="{%static 'no_image.png'%}" style="max-height:50px">
+                  {% endif %}
+                </td>
                 <td> <a href="{% url 'platform_detail' result.name %}">  {{result.name}} </td>
                 <td> <a href="{% url 'platforms'%}">{{result|class_name}} </td>
             {% endif %}
             {% if result|class_name == 'Genre' %}
+                <td>
+                  {%if result.image_url %}
+                    <img src="{{result.image_url}}" style="max-height:50px">
+                  {% else %}
+                    <img src="{%static 'no_image.png'%}" style="max-height:50px">
+                  {% endif %}
+                </td>
                 <td> <a href="{% url 'genre_detail' result.name %}">  {{result.name}} </td>
                 <td> <a href="{% url 'genres'  %}">{{result|class_name}} </td>
             {% endif %}

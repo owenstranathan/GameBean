@@ -41,7 +41,8 @@ from django.contrib.messages import get_messages
 
 def home(request):
     form = SearchForm()
-    return render(request, "GameBean/index.html", {'form' : form, 'user':request.user, })
+    top_reviews = Review.objects.all().order_by('publish_date')[:10]
+    return render(request, "GameBean/index.html", {'form' : form, 'user':request.user, 'reviews' : top_reviews, })
 
 def login(request):
     form = SearchForm()
@@ -368,7 +369,7 @@ def platformDetail(request, platform_name):
                 'form' : form,
                 'user':request.user,
                 }
-    return render(request, "GameBean/developer_detail.html", context)
+    return render(request, "GameBean/platform_detail.html", context)
 
 def search(request):
     searchTerms = None
@@ -394,6 +395,10 @@ def search(request):
     genre_results = Genre.objects.filter(entry_query).order_by('name')
 
     found_entries = list(chain(game_results, company_results, platform_results, genre_results))
+    for obj in found_entries:
+        if searchTerms in obj.name:
+            found_entries.remove(obj)
+            found_entries.insert(0, obj)
 
     paginator_obj = Paginator(found_entries, 100) # show 50 items at a time
 
@@ -417,3 +422,6 @@ def search(request):
     response = render(request, 'GameBean/search_results.html', context)
     response.set_cookie('searchTerms', searchTerms)
     return response
+
+def about(request):
+    return render(request, 'GameBean/about.html')

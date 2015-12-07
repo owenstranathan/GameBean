@@ -1,0 +1,31 @@
+{% extends "paginated_table.html" %}
+{% block head_title%} About Us {% endblock %}
+
+{% load staticfiles %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1>GameBean is open source and free to use</h2>
+    <p> View GameBean source code on github here: <a href="https://github.com/owenstranathan/GameBean.git">GameBean on github</a></p>
+  </div>
+
+  <h3>
+    GameBean Developers:
+  </h3>
+  <div class="well" name="Owen">
+    <img  src="{% static 'about/owen.jpg'%}" style="max-height:200px; max-width:200px">
+    <h3 >Owen</h3>
+    <p>Owen is the primary developer for game bean, he likes bicycles and sarcasm!</p>
+  </div>
+  <div class="well" name="matt">
+    <img   src="{% static 'about/owen.jpg'%}"  style="max-height:200px; max-width:200px">
+    <h3 >Mat</h3>
+    <p>Mat is the lead developer for game bean, he likes StarCraft and half-assing things!</p>
+  </div>
+
+  <div class="well" name="Cameron">
+    <img    src="{% static 'about/owen.jpg'%}"  style="max-height:200px; max-width:200px">
+    <h3 >Cameron</h3>
+    <p>Cameron is there too. He likes toilet paper!</p>
+  </div>
+{% endblock %}
