@@ -45,7 +45,7 @@ from django.contrib.messages import get_messages
 
 def home(request):
     form = SearchForm()
-    top_reviews = Review.objects.all().order_by('-publish_date')[:4]
+    top_reviews = Review.objects.all().order_by('-votes')[:4]
     return render(request, "GameBean/index.html", {'form' : form, 'user':request.user, 'reviews' : top_reviews, })
 
 def login(request):
@@ -293,51 +293,27 @@ def updateReview(request, game_name, reviewer_name):
                }
     return render(request, 'GameBean/game_detail.html', context )
 
+
 @ensure_csrf_cookie
 def vote(request):
-    print "VOTE"
-    print request.POST
 
     review_id = int(request.POST['id'])
-    print 1
-    vote_type = request.POST['type']
-    print 2
-    vote_action = request.POST['action']
-    print 3
 
+    vote_type = request.POST['type']
 
     review = get_object_or_404(Review, pk=review_id)
-    print 4
 
-
-    user_up_voted = review.upVotes.filter(id = request.user.id).count()
-    print 5
-    user_down_voted = review.downVotes.filter(id = request.user.id).count()
-
-    if (vote_action == 'vote'):
-        if (user_up_voted == 0) and (user_down_voted == 0):
-            if (vote_type == 'up'):
-                review.upVotes.add(request.user)
-            elif (vote_type == 'down'):
-                review.downVotes.add(request.user)
-            else:
-                return HttpResponse('error-unknown vote type')
-        else:
-            return HttpResponse('error - already voted', user_up_voted, user_down_voted)
-    elif (vote_action == 'recall-vote'):
-        if (vote_type == 'up') and (user_up_voted == 1):
-            review.upVotes.remove(request.user)
-        elif (vote_type == 'down') and (user_down_voted ==1):
-            review.downVotes.remove(request.user)
-        else:
-            return HttpResponse('error - unknown vote type or no vote to recall')
+    if(vote_type == "up"):
+        review.votes +=1
+        review.save()
+    elif(vote_type == "down"):
+        review.votes -= 1
+        review.save()
     else:
-        return HttpResponse('error - bad action')
+        return HttpResponse("Error", status=400)
 
 
-    num_votes = review.upVotes.count() - review.downVotes.count()
-
-    return HttpResponse(num_votes)
+    return HttpResponse(review.votes)
 
 
 

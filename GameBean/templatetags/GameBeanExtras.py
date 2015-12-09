@@ -21,3 +21,7 @@ def filter_by_id(queryset, id):
 @register.filter
 def count(queryset):
     return queryset.count()
+
+@register.filter
+def sub(first, second):
+    return first-second

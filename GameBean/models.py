@@ -82,6 +82,7 @@ class Review(models.Model):
     game = models.ForeignKey(Game)
     featured = models.BooleanField(default=False)
     publish_date = models.DateTimeField(auto_now_add=True)
+    votes = models.IntegerField(default=0)
     upVotes = models.ManyToManyField(User, related_name="reviews_up_voted")
     downVotes = models.ManyToManyField(User, related_name = "reviews_down_voted")
 

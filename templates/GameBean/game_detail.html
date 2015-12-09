@@ -32,12 +32,12 @@ $.ajaxSetup({
     }
 });
 
+function isInt(n){
+  return Number(n) === n && n % 1 === 0;
+}
+
 
 $(document).ready(function() {
-
-
-
-
   $(".up_vote").click(function() {
     var review_id = $(this).attr("id")
     var vote_type = "up";
@@ -72,18 +72,8 @@ $(document).ready(function() {
         // Code to run if the request succeeds;
         // the response is passed to the function
         success: function( response ) {
-          if (isInt(response)) {
-            if(vote_action == "recall-vote"){
-              $(".up_vote").css("color", "black")
-                .removeClass("selected");
-                //$("div.vote-tally span.num").html(response);
-            }
-            else{
-              $(".up_vote").css("color", "#66ff33")
-                .addClass("selected");
-                  //$("div.vote-tally span.num").html(response);
-            }
-          }
+          console.log("#review_votes_"+review_id.toString());
+          $(".review_votes_"+review_id).html(response);
         },
 
         // Code to run if the request fails; the raw request and
@@ -97,7 +87,62 @@ $(document).ready(function() {
 
         // Code to run regardless of success or failure
         complete: function( xhr, status ) {
-            alert( "The request is complete!" );
+            //alert( "The request is complete!" );
+        }
+    });
+
+  });
+
+
+  $(".down_vote").click(function() {
+    var review_id = $(this).attr("id")
+    var vote_type = "down";
+    var vote_action = "";
+
+    if ($(this).hasClass("selected")) {
+      var vote_action = "recall-vote"
+    }
+    else {
+      var vote_action = "vote"
+    }
+    console.log(vote_action)
+    // Using the core $.ajax() method
+    $.ajax({
+        // The URL for the request
+        url: "{%url 'vote' %}",
+
+        // The data to send (will be converted to a query string)
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          on_what:"review",
+          id:review_id,
+          type:vote_type,
+          action:vote_action
+        },
+
+        // Whether this is a POST or GET request
+        type: "POST",
+
+
+        // Code to run if the request succeeds;
+        // the response is passed to the function
+        success: function( response ) {
+          console.log("#review_votes_"+review_id.toString());
+          $(".review_votes_"+review_id).html(response);
+        },
+
+        // Code to run if the request fails; the raw request and
+        // status codes are passed to the function
+        error: function( xhr, status, errorThrown ) {
+            alert( "Sorry, there was a problem!" );
+            console.log( "Error: " + errorThrown );
+            console.log( "Status: " + status );
+            console.dir( xhr );
+        },
+
+        // Code to run regardless of success or failure
+        complete: function( xhr, status ) {
+            //alert( "The request is complete!" );
         }
     });
 
@@ -216,25 +261,17 @@ $(document).ready(function() {
                   <!-- UP VOTE -->
                   <div class="vote_buttons btn">
                     <!-- IF THE USER HASN'T LIKED THIS REVIEW -->
-                    {% if review.upVotes|filter_by_id:user.id|count == 0 %}
-                      <p><span id="{{review.id}}" class="glyphicon glyphicon-chevron-up up_vote"></span></p>
-                    {% else %}
-                      <p><span id="{{review.id}}" class="glyphicon glyphicon-chevron-up up_vote selected" style="color:#66ff33"></span></p>
-                    {% endif %}
+                    <p><span id="{{review.id}}" class="glyphicon glyphicon-chevron-up up_vote"></span></p>
                   </div>
 
                   <!-- COUNTER -->
                   <div class="vote_tally btn" >
-                    <span style="margin:0 auto" class="num">{{num_votes}}</span>
+                    <span style="margin:0 auto" class="review_votes_{{review.id}}">{{review.votes}}</span>
                   </div>
 
                   <!-- DOWN VOTE -->
                   <div class="vote_buttons btn">
-                    {% if review.upVotes|filter_by_id:user.id|count == 0 %}
-                      <p><span id="{{review.id}}" class="glyphicon glyphicon-chevron-down down_vote"></span></p>
-                    {% else %}
-                      <p><span id="{{review.id}}" class="glyphicon glyphicon-chevron-down down_vote selected" style="color:#66ff33"></span></p>
-                    {% endif %}
+                    <p><span id="{{review.id}}" class="glyphicon glyphicon-chevron-down down_vote"></span></p>
                   </div>
 
                 </div> <!-- .votebuttons -->
