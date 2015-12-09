@@ -1,8 +1,8 @@
 {% extends "paginated_table.html" %}
 {% block head_title %}Games{% endblock %}
+{% load mathfilters %}
 
-
-{% block page-header %}Games{% endblock page-header %}
+{% block page-header %}Games ({{num_games}}){% endblock page-header %}
 
 {%block table_head %}
     <th>Image</th>

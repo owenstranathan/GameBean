@@ -1,9 +1,10 @@
-{% extends "paginated_table.html" %}
+{% extends "base.html" %}
 {% block head_title%} About Us {% endblock %}
 
 {% load staticfiles %}
 
 {% block content %}
+<div class="container">
   <div class="jumbotron">
     <h1>GameBean is open source and free to use</h2>
     <p> View GameBean source code on github here: <a href="https://github.com/owenstranathan/GameBean.git">GameBean on github</a></p>
@@ -28,4 +29,5 @@
     <h3 >Cameron</h3>
     <p>Cameron is there too. He likes toilet paper!</p>
   </div>
+</div>
 {% endblock %}

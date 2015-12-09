@@ -41,7 +41,7 @@ from django.contrib.messages import get_messages
 
 def home(request):
     form = SearchForm()
-    top_reviews = Review.objects.all().order_by('publish_date')[:10]
+    top_reviews = Review.objects.all().order_by('-publish_date')[:4]
     return render(request, "GameBean/index.html", {'form' : form, 'user':request.user, 'reviews' : top_reviews, })
 
 def login(request):
@@ -184,8 +184,12 @@ def profile(request, username):
 
 
 def gamesIndex(request):
-    games = Game.objects.order_by('id',)
+    games = Game.objects.exclude(release_date=None).order_by('-release_date',)
+    games = list(games)
+    games.append(list(Game.objects.filter(release_date=None)))
     form = SearchForm()
+
+
     paginator_obj = Paginator(games, 50) # show 50 developers at a time
     page = request.GET.get('page')
     try:
@@ -197,9 +201,11 @@ def gamesIndex(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         paginator = paginator_obj.page(paginator.num_pages)
 
+
     context = { 'paginator' : paginator,
                 'form' : form,
                 'user':request.user,
+                'num_games' : len(games)
                 }
 
     return render(request, "GameBean/games.html", context)
@@ -208,6 +214,7 @@ def gameDetail(request, game_name):
     has_error = False
     error = ""
     form = SearchForm()
+    print game_name
     game = get_object_or_404(Game, name=game_name)
     reviewForm = ReviewForm()
 
@@ -373,13 +380,15 @@ def platformDetail(request, platform_name):
 
 def search(request):
     searchTerms = None
+    nothing_found = False
     form = SearchForm()
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
             searchTerms = form.cleaned_data['searchWord']
         else:
-            raise Http404
+            return render(request, 'GameBean/search_results.html', {'form' : form, 'nothing_found' : True, 'user':request.user,})
+
 
     elif request.method == 'GET':
         if request.COOKIES.has_key('searchTerms'):
@@ -424,4 +433,5 @@ def search(request):
     return response
 
 def about(request):
-    return render(request, 'GameBean/about.html')
+    form = SearchForm()
+    return render(request, 'GameBean/about.html', { 'form' : form})

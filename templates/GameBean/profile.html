@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block head_title %}{{profile_user.username}}{% endblock %}
 {% load crispy_forms_tags %}
+
 {% block content %}
 <div class="container">
   <div class="jumbotron col-lg-12">
@@ -17,13 +18,15 @@
       <h1>{{profile_user.username}}</h1>
     <p><span> Gamesprout since {{game_sprout.joined}}
   </div>
-  <div class="container">
+  <!-- <div class="container">
     <h2>{{profile_user.username}}'s Platforms</h2>
     <table>
       {% for plat in profile_user.platforms %}
         <td>
+      {% endfor %}
     </table>
-  </div>
+
+  </div> -->
   <div class="container">
   </div>
   <div class="well">
@@ -42,4 +45,4 @@
     {% endfor %}
   </div>
 </div>
-{% endblock %}
+{% endblock content %}

@@ -2,11 +2,13 @@
 {% block head_title %}GameBean{% endblock %}
 
 {% load GameBeanExtras %}
+
 {% block content %}
-
-
-
+<div class="container-fluid" style="text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; background-color:#80ff80;color:#fff;height:75px;">
+  <h1>&iexcl;Featured Reviews!</h1>
+</div>
   <div class="jumbotron">
+
     {% if messages %}
       {% for message in messages%}
             <div class="alert alert-success fade in">
@@ -15,13 +17,20 @@
             </div>
       {% endfor %}
     {% endif %}
+
+
+
     <div class="container">
 
     <style>
-      .review{
-        color:white;
-        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+
+      .review,
+      .review > *,
+      .review.h6{
+        color:white !important;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black !important;
       }
+
       .review_alt{
         color:green;
         text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
@@ -36,15 +45,19 @@
 
       }
     </style>
+
     <div class="container ">
+
         {% for review in reviews %}
         <!-- <img width=200 height=200 src="{{review.game.image_url}}"> -->
 
           <div class="container col-sm-6 top_review-div" style="background-image:url({{review.game.image_url}});">
 
             <h2 class="review" >{{review.game.name}}</h2>
-            <h3 class="review">{{review.title}}</h3>
-            <h4 class="review" style="overflow: hidden; text-overflow: ellipsis;"> {{review.text}} </h4>
+            <h3 class="review">{{review.title|safe}}</h3>
+            <div class="review">
+            <h4 class="review" style="overflow: hidden; text-overflow: ellipsis;"> {{review.text|safe}} </h4>
+          </div>
             <h4 class="review"><span><strong>By</strong> <a style="text-shadow:none" href="{% url 'profile' review.reviewer.username %}">{{review.reviewer.username}}<a> </span></h4>
             <a class="btn btn-primary btn-lg" href="/GameBean/Games/{{review.game.name}}/#{{review.reviewer.username}}">Read review&raquo;</a>
             <!-- {% url 'game_detail' review.game.name%} -->

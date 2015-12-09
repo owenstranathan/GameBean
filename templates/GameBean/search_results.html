@@ -5,16 +5,32 @@
 {% block head_title %}Search Results{% endblock %}
 
 
-{% block page-header %}
-Search for <strong style="color:#4CFF00">{{searchTerms}}</strong> returned <strong style="color:#4CFF00">{{number_of_entries}}</strong> Results
-{% endblock page-header %}
 
-{%block table_head %}
-    <th>Image</th>
-    <th>Name</th>
-    <th>Group</th>
-{% endblock %}
-{%block table_body %}
+<style>
+  ul.errorlist {
+    display: none;
+  }
+</style>
+{%if nothing_found %}
+  {% block optional_error %}
+    <div class="container jumbotron">
+      <h1><strong>Whoops!<strong> there's <strong style="color:green">NOTHING</strong> here, try searching for <strong style="color:green">SOMETHING ELSE</strong</h1>
+    </div>
+
+  {% endblock %}
+
+{% else %}
+
+  {% block page-header %}
+  Search for <strong style="color:#4CFF00">{{searchTerms}}</strong> returned <strong style="color:#4CFF00">{{number_of_entries}}</strong> Results
+  {% endblock page-header %}
+
+  {%block table_head %}
+      <th>Image</th>
+      <th>Name</th>
+      <th>Group</th>
+  {% endblock %}
+  {%block table_body %}
     {% for result in paginator %}
         <tr>
             {% if result|class_name == 'Game' %}
@@ -63,4 +79,6 @@ Search for <strong style="color:#4CFF00">{{searchTerms}}</strong> returned <stro
             {% endif %}
         </tr>
     {% endfor %}
-{% endblock %}
+
+  {% endblock %}
+{%endif%}

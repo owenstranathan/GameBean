@@ -3,17 +3,21 @@
 
 
 {% block content %}
-
-{%block optional_detail %}{%endblock%}
-
+<div class="container">
+  {%block optional_detail %}{%endblock%}
+</div>
 <div class="page-header">
     <h1>{% block page-header %}{% endblock page-header %}</h1>
 </div>
+{%block optional_error %} {% endblock %}
 
-<div class="">
-
+<div class="container">
+  <div class="alert alert-success fade in">
+    Displaying page <strong>{{paginator.number}}</strong> of <strong>{{paginator.paginator.num_pages}}</strong>
+  </div>
     <div class="pagination" style="margin:10px 10px 10px 10px">
-        <ul class="pagination">
+
+        <ul class="pagination" >
             {% if paginator.number > 4%}
                 <li><a href="?page={{paginator.number|add:"-4"}}"><<</a></li>
             {% endif %}
@@ -43,7 +47,7 @@
             {% endif %}
 
             {% if paginator.number|add:"4" < paginator.paginator.num_pages %}
-                <li><a href="?page={{paginator.number|add:"6"}}">>></a></li>
+                <li><a href="?page={{paginator.number|add:"4"}}">>></a></li>
             {% endif %}
         </ul>
     </div>
@@ -102,6 +106,9 @@
                 <li><a href="?page={{paginator.number|add:"6"}}">>></a></li>
             {% endif %}
         </ul>
+    </div>
+    <div class="alert alert-success fade in">
+      Displaying page <strong>{{paginator.number}}</strong> of <strong>{{paginator.paginator.num_pages}}</strong>
     </div>
 </div>
 

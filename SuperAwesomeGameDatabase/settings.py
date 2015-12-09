@@ -62,6 +62,7 @@ INSTALLED_APPS = (
     'GameBean',
     'debug_toolbar',
     'crispy_forms',
+    'mathfilters',
 )
 
 MIDDLEWARE_CLASSES = (
