@@ -4,12 +4,6 @@
 
 {% block content %}
 <div class="jumbotron" width=100% height=20%>
-  {% if has_error %}
-    <div {%if message.tages %} class="{{message.tags}}" {% endif %}>
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      {{error|safe}}
-    </div>
-  {% endif %}
 
     <div class="container col-sm-4">
         {% if game.image_url %}
@@ -56,6 +50,8 @@
     {{ game.description|removetags:"a" }}
   {% endautoescape %}
 </div>
+<!-- Add review -->
+{% if not user_has_reviewed %}
 <div class="well col-lg-12">
     <h3>Write a review</h3>
     <p> Use html syntax to style your review, or just type like a mad man with no regard for style to achieve WALLOFTEXT</p>
@@ -69,21 +65,48 @@
       <p> <a class="btn btn-sm btn-success" href="{% url 'login' %}">login</a> or <a class="btn btn-sm btn-success" href="{% url 'sign_up'%}">sign up</a> to write a review</p>
     {% endif %}
 </div>
+{% endif %}
 
 
-
+<!-- Reviews -->
 <div class="well col-lg-12">
-    <h2> Other user reviews for <span style="color:green">{{game.name}}</span></h2>
+    <h2> <span style="color:green">{{game.name}}</span> reviews from our GameSprouts</h2>
     <hr style="width: 100%; height: 4px; background-color:green; color:#FF0066; border: 0 none;">
+
     {% for review in reviews %}
+
         <div id="{{review.reviewer.username}}" class="jumbotron well">
-            <p><span>Review by <a href="{% url 'profile' review.reviewer.username%}"><span class="glyphicon glyphicon-user"><span>{{review.reviewer.username}}</span></span></a></span>
-            </br>
-            <span style="font-family:Verdana; font-size:10px"><strong>published</strong> {{review.publish_date}}</span></p>
-            <div class="well">
-              <h3> {{review.title}} </h3>
-              <p> {{review.text|safe}} </p>
-            </div>
+          <!-- Review Header -->
+          <p><span>Review by <a href="{% url 'profile' review.reviewer.username%}"><span class="glyphicon glyphicon-user"><span>{{review.reviewer.username}}</span></span></a></span>
+          </br>
+          <span style="font-family:Verdana; font-size:10px"><strong>published</strong> {{review.publish_date}}</span></p>
+
+            {% if update and review.reviewer == user%}
+              <!-- Edit form -->
+              <form class="form-group" role="form" method="post" action="{% url 'review_update' game.name review.reviewer.username %}">
+                  {% csrf_token %}
+                  {{updateReviewForm}}
+                  <button type="submit" class="btn btn-success">Save Changes</button>
+                </form>
+
+            {% else %}
+              <!-- Display -->
+              <div class="well">
+                <h3> {{review.title}} </h3>
+                <p> {{review.text|safe}} </p>
+              </div>
+
+              {% if review.reviewer == user%}
+                <!-- Edit buttons -->
+                <div class="btn-group">
+                  <a class="btn btn-success btn-xs" href="{% url 'review_update' game.name review.reviewer.username %}#{{review.reviewer.username}}">edit</a>
+                  <a class="btn btn-danger btn-xs" href="{% url 'review_delete' game.name review.reviewer.username %}">delete</a>
+                </div>
+
+              {% endif %}
+
+            {% endif %}
+
         </div>
         <hr>
     {% endfor %}

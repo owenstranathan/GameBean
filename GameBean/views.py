@@ -52,7 +52,6 @@ def login(request):
         loginForm = LoginForm()
         # return render(request, "GameBean/login.html", context)
     elif request.method == 'POST':
-        print "biggyfarts"
         # construct login from
         loginForm = LoginForm(request.POST)
         # validate form
@@ -66,7 +65,6 @@ def login(request):
 
             # if the user is authenticated
             if user is not None:
-                print "Biggyfarts 2"
                 # login the user (uses session/provided by django)
                 django_login(request, user)
                 #redirect to home
@@ -210,26 +208,71 @@ def gamesIndex(request):
 
     return render(request, "GameBean/games.html", context)
 
-def gameDetail(request, game_name):
-    has_error = False
-    error = ""
-    form = SearchForm()
+def deleteReview(request, reviewer_name, game_name):
     print game_name
     game = get_object_or_404(Game, name=game_name)
+    user = User.objects.get(username=reviewer_name)
+    try:
+        review = Review.objects.get(reviewer=user, game=game)
+        review.delete()
+    except Review.DoesNotExist:
+        pass
+
+    return redirect('game_detail', game_name=game_name)
+
+def updateReview(request, game_name, reviewer_name):
+    print "UPDATE"
+    form = SearchForm()
+    game = get_object_or_404(Game, name=game_name)
     reviewForm = ReviewForm()
+    user = User.objects.get(username=reviewer_name)
+    review = Review.objects.get(reviewer=user, game=game)
+    data = { 'title': review.title, 'text' : review.text }
+    updateReviewForm = ReviewForm(data=data)
 
     if request.method == 'POST':
         reviewForm = ReviewForm(request.POST)
         if reviewForm.is_valid():
-            try:
-                review = Review.objects.get(reviewer=request.user, game=game)
-                has_error = True
-                error = "<strong>Woah there duder!</strong> You can't review "+ game.name + " more than once my man! Try writing a review for another game."
-            except Review.DoesNotExist:
-                title = reviewForm.cleaned_data["title"]
-                text = reviewForm.cleaned_data["text"]
-                review = Review(title=title, text=text, reviewer=request.user, game=game)
-                review.save()
+            review.title = reviewForm.cleaned_data["title"]
+            review.text = reviewForm.cleaned_data["text"]
+            review.save()
+            return HttpResponseRedirect("/GameBean/Games/"+game_name+"/#"+reviewer_name)
+
+    reviews = Review.objects.filter(game=game)
+    context = {
+               'game': game,
+               'form' : form,
+               'reviewForm' : reviewForm,
+               'update' : True,
+               'updateReviewForm' : updateReviewForm,
+               'reviews' : reviews,
+               'user': request.user,
+               }
+    return render(request, 'GameBean/game_detail.html', context )
+
+
+# updateReview should equal the id of the review to update
+def gameDetail(request, game_name):
+    print "DETAIL"
+    form = SearchForm()
+    game = get_object_or_404(Game, name=game_name)
+    reviewForm = ReviewForm()
+    user_has_reviewed = False
+
+
+    try:
+        review = Review.objects.get(reviewer=request.user, game=game)
+        user_has_reviewed = True
+    except:
+        print "User hasn't reviewed"
+
+    if request.method == 'POST':
+        reviewForm = ReviewForm(request.POST)
+        if reviewForm.is_valid():
+            title = reviewForm.cleaned_data["title"]
+            text = reviewForm.cleaned_data["text"]
+            review = Review(title=title, text=text, reviewer=request.user, game=game)
+            review.save()
 
     reviews = Review.objects.filter(game=game)
     context = {'game': game,
@@ -237,8 +280,7 @@ def gameDetail(request, game_name):
                'reviewForm' : reviewForm,
                'reviews' : reviews,
                'user': request.user,
-               'has_error' : has_error,
-               'error' : error,
+               'user_has_reviewed' : user_has_reviewed,
                }
     return render(request, 'GameBean/game_detail.html', context )
 

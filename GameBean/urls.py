@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^Games/$', views.gamesIndex, name='games'),
     url(r'^Games/(?P<game_name>.+)/$', views.gameDetail, name='game_detail'),
+    url(r'^Games/(?P<game_name>.+)/\?update_review_from=(?P<reviewer_name>.+)$', views.updateReview, name='review_update'),
     url(r'^Genres/$', views.genresIndex, name='genres'),
     url(r'^Genres/(?P<genre_name>.+)/$', views.genreDetail, name='genre_detail'),
     url(r'^Developers/$', views.developersIndex, name='developers'),
@@ -19,5 +20,8 @@ urlpatterns = [
     url(r'^Logout/$', views.logout, name='logout'),
     url(r'^SignUp/$', views.signUp, name='sign_up'),
     url(r'^User/(?P<username>.+)/$', views.profile, name='profile'),
-    url(r'^About/$', views.about, name='about')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^About/$', views.about, name='about'),
+    url(r'^Delete/Review/(?P<game_name>.+)/(?P<reviewer_name>.+)/$', views.deleteReview, name='review_delete'),
+    url(r'^Update/Review/(?P<game_name>.+)/(?P<reviewer_name>.+)/$', views.updateReview, name='review_update'),
+
+] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

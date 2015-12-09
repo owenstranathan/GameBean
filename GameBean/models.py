@@ -83,7 +83,7 @@ class Review(models.Model):
     featured = models.BooleanField(default=False)
     publish_date = models.DateTimeField(auto_now_add=True)
     # votes = models.IntegerField(default=0)
-
+    # voters = models.ManyToManyField(User, related_name="reviews_voted_on")
 
     def __str__(self):
         return unicode(reviewer.username+"_"+self.title)
