@@ -11,15 +11,13 @@
     display: none;
   }
 </style>
-{%if nothing_found %}
-  {% block optional_error %}
+{% block optional_error %}
+  {%if nothing_found %}
     <div class="container jumbotron">
       <h1><strong>Whoops!<strong> there's <strong style="color:green">NOTHING</strong> here, try searching for <strong style="color:green">SOMETHING ELSE</strong</h1>
     </div>
-
-  {% endblock %}
-
-{% else %}
+  {% endif %}
+{% endblock %}
 
   {% block page-header %}
   Search for <strong style="color:#4CFF00">{{searchTerms}}</strong> returned <strong style="color:#4CFF00">{{number_of_entries}}</strong> Results
@@ -81,4 +79,3 @@
     {% endfor %}
 
   {% endblock %}
-{%endif%}

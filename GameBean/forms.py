@@ -15,7 +15,8 @@ class ReviewForm(forms.Form):
     text = forms.CharField(max_length = 200, widget=forms.Textarea(attrs={'class' : 'form-control', 'style' : 'height:100px', 'placeholder' : 'Write you\'re review here'}))
     class Meta:
         model = Review
-        
+
+
 class SignUpForm(forms.Form):
     email = forms.CharField(max_length = 200,  widget=forms.TextInput(attrs={'class' : 'form-control', 'placeholder':'email'}))
     username = forms.CharField(max_length = 200,  widget=forms.TextInput(attrs={'class' : 'form-control', 'placeholder':'username'}))

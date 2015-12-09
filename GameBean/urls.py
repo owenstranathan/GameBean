@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^About/$', views.about, name='about'),
     url(r'^Delete/Review/(?P<game_name>.+)/(?P<reviewer_name>.+)/$', views.deleteReview, name='review_delete'),
     url(r'^Update/Review/(?P<game_name>.+)/(?P<reviewer_name>.+)/$', views.updateReview, name='review_update'),
+    url(r'^Vote/', views.vote, name='vote'),
 
 ] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

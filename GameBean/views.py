@@ -28,6 +28,10 @@ from .forms import ReviewForm
 """REVIEWING"""
 from .models import Review#, ReviewVoter
 
+"""REVIEW VOTING """
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+
 """GAME VOTING"""
 # from .models import GameVoter
 
@@ -179,8 +183,6 @@ def profile(request, username):
     return render(request, "GameBean/profile.html", context)
 
 
-
-
 def gamesIndex(request):
     games = Game.objects.exclude(release_date=None).order_by('-release_date',)
     games = list(games)
@@ -207,6 +209,47 @@ def gamesIndex(request):
                 }
 
     return render(request, "GameBean/games.html", context)
+
+
+
+# updateReview should equal the id of the review to update
+def gameDetail(request, game_name):
+    print "DETAIL"
+    form = SearchForm()
+    game = get_object_or_404(Game, name=game_name)
+    reviewForm = ReviewForm()
+    user_has_reviewed = False
+
+
+    try:
+        review = Review.objects.get(reviewer=request.user, game=game)
+        user_has_reviewed = True
+    except:
+        print "User hasn't reviewed"
+
+    if request.method == 'POST':
+        reviewForm = ReviewForm(request.POST)
+        if reviewForm.is_valid():
+            try:
+                review = Review.objects.get(reviewer=request.user, game=game)
+                messages.add_message(request, messages.INFO, "<strong>WHOA THERE BUSTER!</strong> You gotta be more careful when your resending data, you almost put a duplicate entry in our database. Thats not cool!", extra_tags="alert alert-warning fade in")
+                return redirect('game_detail', game_name=game_name)
+            except:
+                title = reviewForm.cleaned_data["title"]
+                text = reviewForm.cleaned_data["text"]
+                review = Review(title=title, text=text, reviewer=request.user, game=game)
+                review.save()
+
+    reviews = Review.objects.filter(game=game)
+    context = {'game': game,
+               'form' : form,
+               'reviewForm' : reviewForm,
+               'reviews' : reviews,
+               'user': request.user,
+               'user_has_reviewed' : user_has_reviewed,
+               }
+    return render(request, 'GameBean/game_detail.html', context )
+
 
 def deleteReview(request, reviewer_name, game_name):
     print game_name
@@ -250,39 +293,54 @@ def updateReview(request, game_name, reviewer_name):
                }
     return render(request, 'GameBean/game_detail.html', context )
 
+@ensure_csrf_cookie
+def vote(request):
+    print "VOTE"
+    print request.POST
 
-# updateReview should equal the id of the review to update
-def gameDetail(request, game_name):
-    print "DETAIL"
-    form = SearchForm()
-    game = get_object_or_404(Game, name=game_name)
-    reviewForm = ReviewForm()
-    user_has_reviewed = False
+    review_id = int(request.POST['id'])
+    print 1
+    vote_type = request.POST['type']
+    print 2
+    vote_action = request.POST['action']
+    print 3
 
 
-    try:
-        review = Review.objects.get(reviewer=request.user, game=game)
-        user_has_reviewed = True
-    except:
-        print "User hasn't reviewed"
+    review = get_object_or_404(Review, pk=review_id)
+    print 4
 
-    if request.method == 'POST':
-        reviewForm = ReviewForm(request.POST)
-        if reviewForm.is_valid():
-            title = reviewForm.cleaned_data["title"]
-            text = reviewForm.cleaned_data["text"]
-            review = Review(title=title, text=text, reviewer=request.user, game=game)
-            review.save()
 
-    reviews = Review.objects.filter(game=game)
-    context = {'game': game,
-               'form' : form,
-               'reviewForm' : reviewForm,
-               'reviews' : reviews,
-               'user': request.user,
-               'user_has_reviewed' : user_has_reviewed,
-               }
-    return render(request, 'GameBean/game_detail.html', context )
+    user_up_voted = review.upVotes.filter(id = request.user.id).count()
+    print 5
+    user_down_voted = review.downVotes.filter(id = request.user.id).count()
+
+    if (vote_action == 'vote'):
+        if (user_up_voted == 0) and (user_down_voted == 0):
+            if (vote_type == 'up'):
+                review.upVotes.add(request.user)
+            elif (vote_type == 'down'):
+                review.downVotes.add(request.user)
+            else:
+                return HttpResponse('error-unknown vote type')
+        else:
+            return HttpResponse('error - already voted', user_up_voted, user_down_voted)
+    elif (vote_action == 'recall-vote'):
+        if (vote_type == 'up') and (user_up_voted == 1):
+            review.upVotes.remove(request.user)
+        elif (vote_type == 'down') and (user_down_voted ==1):
+            review.downVotes.remove(request.user)
+        else:
+            return HttpResponse('error - unknown vote type or no vote to recall')
+    else:
+        return HttpResponse('error - bad action')
+
+
+    num_votes = review.upVotes.count() - review.downVotes.count()
+
+    return HttpResponse(num_votes)
+
+
+
 
 def genresIndex(request):
     genres = Genre.objects.order_by('id',)

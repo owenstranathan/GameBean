@@ -13,3 +13,11 @@ def get_range( value ):
 @register.filter
 def mod( argument, value):
     return argument%value
+
+@register.filter
+def filter_by_id(queryset, id):
+    return queryset.filter(id=id)
+
+@register.filter
+def count(queryset):
+    return queryset.count()

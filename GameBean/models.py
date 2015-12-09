@@ -82,8 +82,8 @@ class Review(models.Model):
     game = models.ForeignKey(Game)
     featured = models.BooleanField(default=False)
     publish_date = models.DateTimeField(auto_now_add=True)
-    # votes = models.IntegerField(default=0)
-    # voters = models.ManyToManyField(User, related_name="reviews_voted_on")
+    upVotes = models.ManyToManyField(User, related_name="reviews_up_voted")
+    downVotes = models.ManyToManyField(User, related_name = "reviews_down_voted")
 
     def __str__(self):
         return unicode(reviewer.username+"_"+self.title)
